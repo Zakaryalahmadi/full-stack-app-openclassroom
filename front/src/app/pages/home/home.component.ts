@@ -3,8 +3,15 @@ import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
+  template: `
+    <div class="flex flex-col items-center justify-center h-screen">
+      <img src="/assets/logo_p6.png" alt="logo" />
+      <h1 class="text-3xl font-bold underline">Welcome to MDD</h1>
+      <button mat-raised-button color="primary" (click)="start()">
+        Commencer
+      </button>
+    </div>
+  `,
   standalone: true,
   imports: [MatButtonModule],
 })
