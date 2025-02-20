@@ -9,7 +9,7 @@ export class ArticleApiGateway implements ArticleGateway {
 
   private readonly mockArticles: Article[] = [
     {
-      id: '1',
+      id: 1,
       title: 'Getting Started with Angular',
       author: 'John Doe',
       content:
@@ -17,7 +17,7 @@ export class ArticleApiGateway implements ArticleGateway {
       date: '2024-01-15',
     },
     {
-      id: '2',
+      id: 2,
       title: 'Understanding RxJS Observables',
       author: 'Jane Smith',
       content:
@@ -25,7 +25,7 @@ export class ArticleApiGateway implements ArticleGateway {
       date: '2024-01-20',
     },
     {
-      id: '3',
+      id: 3,
       title: 'Angular Best Practices',
       author: 'Mike Johnson',
       content:

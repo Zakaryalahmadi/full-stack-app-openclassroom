@@ -6,7 +6,7 @@ import { DatePipe } from '@angular/common';
   selector: 'app-article-card',
   imports: [DatePipe],
   template: `
-    <div class="flex flex-col bg-card rounded-lg p-4">
+    <div class="bg-card rounded-lg p-4">
       <h2>{{ article().title }}</h2>
       <div class="flex w-1/2 justify-between">
         <p>{{ article().date | date }}</p>
