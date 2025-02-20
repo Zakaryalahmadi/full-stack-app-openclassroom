@@ -19,7 +19,7 @@ export type RegisterForm = {
     MatButtonModule,
   ],
   template: `
-    <div class="flex flex-col items-center justify-center h-screen">
+    <div class="flex flex-col items-center justify-center">
       <h1>Inscription</h1>
       <form class="flex items-center flex-col" [formGroup]="registerForm">
         <p>
