@@ -19,25 +19,25 @@ export type RegisterForm = {
     MatButtonModule,
   ],
   template: `
-    <div class="flex flex-col items-center justify-center">
+    <div class="flex flex-col items-center justify-center h-full">
       <h1>Inscription</h1>
-      <form class="flex items-center flex-col" [formGroup]="registerForm">
+      <form class="flex items-center flex-col">
         <p>
           <mat-form-field class="w-64" appearance="outline">
             <mat-label>Nom d'utilisateur</mat-label>
-            <input matInput formControlName="username" />
+            <input matInput [formControl]="registerForm.controls.username" />
           </mat-form-field>
         </p>
         <p>
           <mat-form-field class="w-64" appearance="outline">
             <mat-label>Email</mat-label>
-            <input matInput formControlName="email" />
+            <input matInput [formControl]="registerForm.controls.email" />
           </mat-form-field>
         </p>
         <p>
           <mat-form-field class="w-64" appearance="outline">
             <mat-label>Mot de passe</mat-label>
-            <input matInput formControlName="password" />
+            <input matInput [formControl]="registerForm.controls.password" />
           </mat-form-field>
         </p>
         <button class="w-40" mat-raised-button color="primary">

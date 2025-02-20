@@ -1,10 +1,16 @@
 import { Routes } from '@angular/router';
 
-const authRoutes: Routes = [
-  { path: 'login', loadComponent: () => import('./login/login.component') },
+export const authRoutes: Routes = [
   {
-    path: 'register',
-    loadComponent: () => import('./register/register.component'),
+    path: '',
+    loadComponent: () => import('../../layout/layout.component'),
+    children: [
+      { path: 'login', loadComponent: () => import('./login/login.component') },
+      {
+        path: 'register',
+        loadComponent: () => import('./register/register.component'),
+      },
+    ],
   },
 ];
 
