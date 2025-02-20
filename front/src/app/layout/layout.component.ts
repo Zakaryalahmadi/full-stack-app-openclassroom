@@ -6,7 +6,7 @@ import { HeaderComponent } from '../shared/header/header.component';
   selector: 'app-layout',
   template: `
     <div class="flex flex-col h-screen">
-      <app-header></app-header>
+      <app-header class="hidden sm:block"></app-header>
       <div class="flex-1">
         <router-outlet></router-outlet>
       </div>

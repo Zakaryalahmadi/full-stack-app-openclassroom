@@ -7,6 +7,16 @@ export const routes: Routes = [
   },
   {
     path: '',
-    loadChildren: () => import('./views/auth/auth.routing'),
+    loadComponent: () => import('./layout/layout.component'),
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('./views/auth/auth.routing'),
+      },
+      {
+        path: 'home',
+        loadChildren: () => import('./views/home/home.routing'),
+      },
+    ],
   },
 ];

@@ -5,7 +5,11 @@
   },
   content: ["./src/**/*.{html,ts}"],
   theme: {
-    extend: {},
+    extend: {
+      backgroundColor: {
+        'card': '#F5F5F5',
+      }
+    },
   },
   plugins: [],
 }
