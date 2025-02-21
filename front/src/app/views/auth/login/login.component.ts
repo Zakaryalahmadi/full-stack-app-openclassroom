@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthHeaderWidgetComponent } from '../components/auth-header-widget/auth-header-widget.component';
 import { RouterLink } from '@angular/router';
+import { AuthenticationService } from 'src/app/core/ports/auth/authentication.service';
 
 export type LoginForm = {
   usernameOrEmail: FormControl<string>;
@@ -46,7 +47,12 @@ export type LoginForm = {
               <input matInput [formControl]="loginForm.controls.password" />
             </mat-form-field>
           </p>
-          <button class="w-40" mat-raised-button color="primary">
+          <button
+            class="w-40"
+            mat-raised-button
+            color="primary"
+            (click)="onSubmit($event)"
+          >
             Se connecter
           </button>
         </form>
@@ -60,4 +66,8 @@ export default class LoginComponent {
     usernameOrEmail: new FormControl<string>('', { nonNullable: true }),
     password: new FormControl<string>('', { nonNullable: true }),
   });
+
+  onSubmit(event: Event): void {
+    event.preventDefault();
+  }
 }

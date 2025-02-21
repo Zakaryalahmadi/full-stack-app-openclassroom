@@ -3,16 +3,18 @@ import { inject, Signal } from '@angular/core';
 import { Injectable } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
-
+import { CustomBreakPoints } from '../types/custom-break-points';
 @Injectable({
   providedIn: 'root',
 })
 export class ResponsiveService {
   private readonly breakpointObserver = inject(BreakpointObserver);
 
+  private readonly CustomBreakPoints = CustomBreakPoints;
+
   private readonly isMobile = toSignal(
     this.breakpointObserver
-      .observe(Breakpoints.Handset)
+      .observe(this.CustomBreakPoints.Mobile)
       .pipe(map((result) => result.matches)),
     { initialValue: false }
   );
