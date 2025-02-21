@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import ArticleCardComponent from '../article-card/article-card.component';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ArticleGateway } from 'src/app/core/ports/Article.gateway';
+import { ArticleGateway } from 'src/app/core/ports/article.gateway';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 @Component({
@@ -9,7 +9,9 @@ import { MatIconModule } from '@angular/material/icon';
   imports: [ArticleCardComponent, MatButtonModule, MatIconModule],
   template: `
     <div class="flex flex-col items-start p-9 gap-8">
-      <div class="w-full flex items-center justify-between">
+      <div
+        class="w-full flex items-center justify-between flex-col gap-6 sm:flex-row "
+      >
         <button mat-raised-button color="primary">Créer un article</button>
         <button
           class="text-xl bg-white cursor-pointer border-none flex items-center gap-2"

@@ -8,6 +8,9 @@
     extend: {
       backgroundColor: {
         'card': '#F5F5F5',
+      },
+      colors: {
+        'primary': '#6C5CCF',
       }
     },
   },

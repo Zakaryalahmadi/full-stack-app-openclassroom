@@ -1,6 +1,6 @@
 import { Observable, of } from 'rxjs';
 import { Article } from '../models/article.model';
-import { ArticleGateway } from '../ports/Article.gateway';
+import { ArticleGateway } from '../ports/article.gateway';
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
@@ -31,6 +31,14 @@ export class ArticleApiGateway implements ArticleGateway {
       content:
         'Discover the best practices and patterns for developing scalable and maintainable Angular applications. Topics include component design, state management, and performance optimization.',
       date: '2024-01-25',
+    },
+    {
+      id: 4,
+      title: 'RxJS Observables in Angular',
+      author: 'Sarah Lee',
+      content:
+        'RxJS Observables are a powerful tool for handling asynchronous data streams in Angular applications. This article will cover the basics of RxJS Observables and how to use them effectively in your projects.',
+      date: '2024-01-30',
     },
   ];
 
