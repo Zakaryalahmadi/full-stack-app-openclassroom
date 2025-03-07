@@ -7,6 +7,7 @@ import com.openclassrooms.mddapi.topic.adapter.persistence.TopicEntity;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -14,15 +15,8 @@ import java.util.stream.Collectors;
 @Component
 public class UserDomainToUserEntityMapper implements Function<User, UserEntity> {
 
-    private final TopicEntityMapper topicEntityMapper;
-
-    public UserDomainToUserEntityMapper(@Lazy TopicEntityMapper topicEntityMapper) {
-        this.topicEntityMapper = topicEntityMapper;
-    }
-
     @Override
     public UserEntity apply(User user) {
-
         return new UserEntity(
                 user.getId(),
                 user.getUsername(),

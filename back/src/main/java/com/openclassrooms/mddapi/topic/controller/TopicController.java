@@ -30,9 +30,9 @@ public class TopicController {
         return this.getAllTopicService.handle().stream().map(topicToTopicPresenterMapper).toList();
     }
 
-//    @PostMapping("/{topicId}/follow")
-//    public TopicPresenter followTopic(@PathVariable Long topicId, @RequestParam Long userId) {
-//        Topic topic = this.topicSubscriptionService.handle(topicId, userId);
-//        return topicToTopicPresenterMapper.apply(topic);
-//    }
+    @PatchMapping("/{topicId}/follow")
+    public TopicPresenter followTopic(@PathVariable Long topicId, @RequestParam Long userId) {
+        Topic topic = this.topicSubscriptionService.handle(topicId, userId);
+        return topicToTopicPresenterMapper.apply(topic);
+    }
 }

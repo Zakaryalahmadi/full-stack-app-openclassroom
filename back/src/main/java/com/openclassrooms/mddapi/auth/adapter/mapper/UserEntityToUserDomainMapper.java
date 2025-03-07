@@ -16,7 +16,6 @@ public class UserEntityToUserDomainMapper implements Function<UserEntity, User> 
 
     @Override
     public User apply(UserEntity userEntity) {
-
         return new User(
                 userEntity.getId(),
                 userEntity.getUsername(),

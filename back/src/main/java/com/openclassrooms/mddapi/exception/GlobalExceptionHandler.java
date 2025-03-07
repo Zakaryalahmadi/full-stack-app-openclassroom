@@ -2,6 +2,7 @@ package com.openclassrooms.mddapi.exception;
 
 import com.openclassrooms.mddapi.auth.exceptions.UserAlreadyExist;
 import com.openclassrooms.mddapi.auth.exceptions.UserNotFound;
+import com.openclassrooms.mddapi.topic.exception.TopicNotFound;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,19 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserNotFound.class)
     public ResponseEntity<ApiError> handleUserNotFound(UserNotFound ex, HttpServletRequest request){
+        ApiError apiError = ApiError.builder()
+                .timestamp(LocalDateTime.now())
+                .path(request.getRequestURI())
+                .message(Collections.singletonList(ex.getMessage()))
+                .status(HttpStatus.BAD_REQUEST.value())
+                .build();
+
+
+        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(TopicNotFound.class)
+    public ResponseEntity<ApiError> handleTopicNotFound(TopicNotFound ex, HttpServletRequest request){
         ApiError apiError = ApiError.builder()
                 .timestamp(LocalDateTime.now())
                 .path(request.getRequestURI())

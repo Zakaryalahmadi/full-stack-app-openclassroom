@@ -30,6 +30,14 @@ public class TopicEntity {
     @Column(nullable = false)
     private String description;
 
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_subscriptions",
+            joinColumns = @JoinColumn(name = "topic_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<UserEntity> subscribers = new HashSet<>();
+
 
     @Column(nullable = false, name = "date_created")
     private LocalDateTime dateCreated;

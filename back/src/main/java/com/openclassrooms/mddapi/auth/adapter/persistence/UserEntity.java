@@ -37,4 +37,8 @@ public class UserEntity  {
         this.dateCreated = LocalDateTime.now();
     }
 
+    @PreUpdate
+    protected void onUpdated(){
+        this.dateUpdated = LocalDateTime.now();
+    }
 }

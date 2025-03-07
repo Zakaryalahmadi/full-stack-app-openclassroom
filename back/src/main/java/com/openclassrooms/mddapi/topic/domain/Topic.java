@@ -5,17 +5,19 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor(force = true)
+@NoArgsConstructor
 @Builder
 public class Topic {
-    private final Long id;
-    private final String title;
-    private final String description;
-    private final LocalDateTime dateCreated;
-    private final LocalDateTime dateUpdated;
+    private Long id;
+    private String title;
+    private String description;
+    private Set<User> subscribers;
+    private LocalDateTime dateCreated;
+    private LocalDateTime dateUpdated;
 }
