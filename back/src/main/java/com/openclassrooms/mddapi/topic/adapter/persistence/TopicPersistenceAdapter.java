@@ -47,19 +47,4 @@ public class TopicPersistenceAdapter implements TopicRepository {
 
         return this.topicEntityMapper.toDomain(createdTopicEntity);
     }
-
-
-    @Override
-    public Topic followTopic(Long topicId, Long userId) {
-        TopicEntity topicEntity = topicJpaRepository.findById(topicId)
-                .orElseThrow(() -> new TopicNotFound(topicId));
-
-        UserEntity userEntity = userJpaRepository.findById(userId).orElseThrow(() -> new UserNotFound(userId));
-
-        topicEntity.getSubscribers().add(userEntity);
-
-        TopicEntity savedTopicEntity = topicJpaRepository.save(topicEntity);
-
-        return topicEntityMapper.toDomain(savedTopicEntity);
-    }
 }

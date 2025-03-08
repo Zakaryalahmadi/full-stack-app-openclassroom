@@ -1,10 +1,13 @@
 package com.openclassrooms.mddapi.auth.services;
 
+import com.openclassrooms.mddapi.auth.adapter.security.JWTService;
 import com.openclassrooms.mddapi.auth.controller.dtos.CreateUpdateUserDto;
 import com.openclassrooms.mddapi.auth.domain.User;
 import com.openclassrooms.mddapi.auth.domain.UserRepository;
+import com.openclassrooms.mddapi.auth.domain.UserWithToken;
 import com.openclassrooms.mddapi.auth.exceptions.UserAlreadyExist;
 import com.openclassrooms.mddapi.auth.services.common.UserValidationService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,13 +19,19 @@ public class CreateUserService {
 
     private final UserValidationService userValidationService;
 
-    public CreateUserService(UserRepository userRepository, UserValidationService userValidationService) {
+    private final JWTService jwtService;
+
+    private final PasswordEncoder passwordEncoder;
+
+    public CreateUserService(UserRepository userRepository, UserValidationService userValidationService, JWTService jwtService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userValidationService = userValidationService;
+        this.jwtService = jwtService;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
-    public User handle(CreateUpdateUserDto createUserDto){
+    public UserWithToken handle(CreateUpdateUserDto createUserDto){
 
         userValidationService.validateEmailUniqueness(createUserDto.email());
 
@@ -30,11 +39,15 @@ public class CreateUserService {
 
         User newUser = User.builder()
                 .username(createUserDto.username())
-                .password(createUserDto.password())
+                .password(passwordEncoder.encode(createUserDto.password()))
                 .email(createUserDto.email())
                 .dateCreated(LocalDateTime.now())
                 .build();
 
-        return this.userRepository.save(newUser);
+        User savedUser = this.userRepository.save(newUser);
+
+        String token = jwtService.generateToken(newUser);
+
+        return new UserWithToken(savedUser, token);
     }
 }

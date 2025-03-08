@@ -1,5 +1,6 @@
 package com.openclassrooms.mddapi.exception;
 
+import com.openclassrooms.mddapi.auth.exceptions.AuthenticationException;
 import com.openclassrooms.mddapi.auth.exceptions.UserAlreadyExist;
 import com.openclassrooms.mddapi.auth.exceptions.UserNotFound;
 import com.openclassrooms.mddapi.topic.exception.TopicNotFound;
@@ -37,7 +38,7 @@ public class GlobalExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .path(request.getRequestURI())
                 .message(Collections.singletonList(ex.getMessage()))
-                .status(HttpStatus.BAD_REQUEST.value())
+                .status(HttpStatus.NOT_FOUND.value())
                 .build();
 
 
@@ -50,7 +51,7 @@ public class GlobalExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .path(request.getRequestURI())
                 .message(Collections.singletonList(ex.getMessage()))
-                .status(HttpStatus.BAD_REQUEST.value())
+                .status(HttpStatus.NOT_FOUND.value())
                 .build();
 
 
@@ -73,6 +74,19 @@ public class GlobalExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .message(errors)
                 .build();
+
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiError> handleAuthenticationException(AuthenticationException ex, HttpServletRequest request){
+        ApiError apiError = ApiError.builder()
+                .timestamp(LocalDateTime.now())
+                .path(request.getRequestURI())
+                .message(Collections.singletonList(ex.getMessage()))
+                .status(HttpStatus.BAD_REQUEST.value())
+                .build();
+
 
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
