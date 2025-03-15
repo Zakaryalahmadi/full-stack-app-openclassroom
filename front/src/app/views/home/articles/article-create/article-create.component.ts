@@ -1,0 +1,33 @@
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { ArticleCreateFormComponent } from './article-create-form/article-create-form.component';
+import { GoBackPageHeaderComponent } from '../../../../shared/components/go-back-page-header/go-back-page-header.component';
+
+@Component({
+  selector: 'app-article-create',
+  imports: [
+    MatButtonModule,
+    MatIconModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    ArticleCreateFormComponent,
+    GoBackPageHeaderComponent,
+  ],
+  template: `
+    <div class="flex flex-col items-center">
+      <app-go-back-page-header class="w-full">
+        <h1 class="text-2xl font-bold">Créer nouvel un article</h1>
+      </app-go-back-page-header>
+      <app-article-create-form />
+    </div>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export default class ArticleCreateComponent {}

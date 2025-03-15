@@ -7,7 +7,8 @@
   theme: {
     extend: {
       backgroundColor: {
-        'card': '#F5F5F5',
+        'card-primary': '#F5F5F5',
+        'card-secondary': '#EEEEEE',
       },
       colors: {
         'primary': '#6C5CCF',

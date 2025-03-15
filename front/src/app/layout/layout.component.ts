@@ -17,7 +17,6 @@ import { DrawerService } from '../shared/components/drawer/drawer.service';
       </div>
     </app-drawer>
   `,
-  standalone: true,
   imports: [
     MatSidenavModule,
     MatIconModule,

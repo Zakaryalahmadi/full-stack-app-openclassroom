@@ -1,10 +1,17 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
+import { ActiveAccountUserCircleComponent } from '../../active-account-user-circle/active-account-user-circle.component';
+import { InactiveAccountUserCircleComponent } from '../../inactive-account-user-circle/inactive-account-user-circle.component';
 
 @Component({
   selector: 'app-navigation',
-  imports: [MatIconModule, RouterModule],
+  imports: [
+    MatIconModule,
+    RouterModule,
+    ActiveAccountUserCircleComponent,
+    InactiveAccountUserCircleComponent,
+  ],
   template: `
     <div class="h-full flex">
       <nav
@@ -15,6 +22,7 @@ import { RouterModule } from '@angular/router';
             <a
               routerLink="home/articles"
               [routerLinkActive]="['text-primary']"
+              [routerLinkActiveOptions]="{ exact: true }"
               class="no-underline text-2xl sm:text-xl"
               #articleLink="routerLinkActive"
               [class.text-black]="!articleLink.isActive"
@@ -25,6 +33,7 @@ import { RouterModule } from '@angular/router';
             <a
               routerLink="home/themes"
               [routerLinkActive]="['text-primary']"
+              [routerLinkActiveOptions]="{ exact: true }"
               class="no-underline  text-2xl sm:text-xl"
               #themeLink="routerLinkActive"
               [class.text-black]="!themeLink.isActive"
@@ -34,9 +43,18 @@ import { RouterModule } from '@angular/router';
         </ul>
         <ul>
           <li class="list-none">
-            <a routerLink="/account">
+            <a
+              routerLink="home/account"
+              [routerLinkActive]="['text-primary']"
+              [routerLinkActiveOptions]="{ exact: true }"
+              #accountLink="routerLinkActive"
+            >
               <div class="flex items-center gap-2">
-                <img src="/assets/account-circle.svg" alt="account" />
+                @if (accountLink.isActive) {
+                <app-active-account-user-circle />
+                } @else {
+                <app-inactive-account-user-circle />
+                }
               </div>
             </a>
           </li>

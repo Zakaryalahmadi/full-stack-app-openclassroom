@@ -1,5 +1,13 @@
 import { NgIf } from '@angular/common';
-import { Directive, inject, OnInit } from '@angular/core';
+import {
+  Directive,
+  effect,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy,
+  input,
+  Input,
+} from '@angular/core';
 import { AuthenticationService } from 'src/app/core/ports/auth/authentication.service';
 
 @Directive({
@@ -10,14 +18,15 @@ import { AuthenticationService } from 'src/app/core/ports/auth/authentication.se
     },
   ],
 })
-export class IfAuthenticatedDirective implements OnInit {
-  private readonly isAuthenticated = inject(
-    AuthenticationService
-  ).getIsAuthenticated();
+export class IfAuthenticatedDirective {
+  private readonly authenticationService = inject(AuthenticationService);
 
   private ngIfDirective = inject(NgIf);
 
-  ngOnInit() {
-    this.ngIfDirective.ngIf = this.isAuthenticated();
+  constructor() {
+    effect(() => {
+      const isAuthenticated = this.authenticationService.getIsAuthenticated()();
+      this.ngIfDirective.ngIf = isAuthenticated;
+    });
   }
 }

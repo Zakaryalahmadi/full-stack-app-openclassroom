@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   computed,
   inject,
@@ -15,6 +16,8 @@ import { IfAuthenticatedDirective } from '../../directives/if-authenticated.dire
 import { Router } from '@angular/router';
 import { RouteService } from '../../services/route.service';
 import { ResponsiveService } from '../../services/responsive.service';
+import { AuthenticationService } from 'src/app/core/ports/auth/authentication.service';
+import { NgIf } from '@angular/common';
 @Component({
   selector: 'app-header',
   imports: [
@@ -23,19 +26,24 @@ import { ResponsiveService } from '../../services/responsive.service';
     MatButtonModule,
     MatSidenavModule,
     IfAuthenticatedDirective,
+    NgIf,
   ],
   template: ` @if(!(isLoginOrRegister() && isMobile())){
     <header
       class="flex justify-between p-4 border-solid border-0 border-b border-black-900"
     >
       <img class="w-36" src="/assets/logo_p6.png" alt="logo" />
-      <app-navigation *IfAuthenticated class="hidden sm:block" />
+      <ng-container *ngIf="!isLoginOrRegister()">
+        <app-navigation *IfAuthenticated class="hidden sm:block" />
+      </ng-container>
 
-      <div *IfAuthenticated class="flex items-center sm:hidden ">
-        <button (click)="toggleDrawer()" mat-icon-button>
-          <mat-icon>menu</mat-icon>
-        </button>
-      </div>
+      <ng-container *ngIf="!isLoginOrRegister()">
+        <div *IfAuthenticated class="flex items-center sm:hidden ">
+          <button (click)="toggleDrawer()" mat-icon-button>
+            <mat-icon>menu</mat-icon>
+          </button>
+        </div>
+      </ng-container>
     </header>
     }`,
   changeDetection: ChangeDetectionStrategy.OnPush,

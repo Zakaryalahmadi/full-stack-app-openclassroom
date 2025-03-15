@@ -6,12 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { AuthHeaderWidgetComponent } from '../components/auth-header-widget/auth-header-widget.component';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
-
-export type RegisterForm = {
-  username: FormControl<string | null>;
-  email: FormControl<string>;
-  password: FormControl<string>;
-};
+import { RegisterFormComponent } from './register-form.component';
 
 @Component({
   selector: 'app-register',
@@ -22,47 +17,16 @@ export type RegisterForm = {
     MatButtonModule,
     AuthHeaderWidgetComponent,
     MatIconModule,
-    RouterLink,
+    RegisterFormComponent,
   ],
   template: `
-    <div class="flex flex-col h-full">
-      <mat-icon class="cursor-pointer m-8" routerLink="/">arrow_back</mat-icon>
-      <div class="flex flex-col items-center justify-center h-full">
-        <app-auth-header-widget>
-          <h1 auth-title>Inscription</h1>
-        </app-auth-header-widget>
-        <form class="flex items-center flex-col">
-          <p>
-            <mat-form-field class="w-64" appearance="outline">
-              <mat-label>Nom d'utilisateur</mat-label>
-              <input matInput [formControl]="registerForm.controls.username" />
-            </mat-form-field>
-          </p>
-          <p>
-            <mat-form-field class="w-64" appearance="outline">
-              <mat-label>Email</mat-label>
-              <input matInput [formControl]="registerForm.controls.email" />
-            </mat-form-field>
-          </p>
-          <p>
-            <mat-form-field class="w-64" appearance="outline">
-              <mat-label>Mot de passe</mat-label>
-              <input matInput [formControl]="registerForm.controls.password" />
-            </mat-form-field>
-          </p>
-          <button class="w-40" mat-raised-button color="primary">
-            S'inscrire
-          </button>
-        </form>
-      </div>
+    <div class="flex flex-col items-center  h-full">
+      <app-auth-header-widget class="w-full">
+        <h1 auth-title>Inscription</h1>
+      </app-auth-header-widget>
+      <app-register-form />
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class RegisterComponent {
-  readonly registerForm = new FormGroup<RegisterForm>({
-    username: new FormControl<string | null>(null, { nonNullable: true }),
-    email: new FormControl<string>('', { nonNullable: true }),
-    password: new FormControl<string>('', { nonNullable: true }),
-  });
-}
+export default class RegisterComponent {}

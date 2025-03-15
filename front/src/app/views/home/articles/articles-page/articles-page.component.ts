@@ -1,30 +1,17 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import ArticleCardComponent from '../article-card/article-card.component';
+import ArticleActionsBarComponent from '../components/article-actions-bar/article-actions-bar.component';
+import ArticleListComponent from '../components/article-list/article-list.component';
+import { ArticleGateway } from 'src/app/core/ports/article/article.gateway';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ArticleGateway } from 'src/app/core/ports/article.gateway';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
+
 @Component({
   selector: 'app-articles-page',
-  imports: [ArticleCardComponent, MatButtonModule, MatIconModule],
+  imports: [ArticleActionsBarComponent, ArticleListComponent],
   template: `
-    <div class="flex flex-col items-start p-9 gap-8">
-      <div
-        class="w-full flex items-center justify-between flex-col gap-6 sm:flex-row "
-      >
-        <button mat-raised-button color="primary">Créer un article</button>
-        <button
-          class="text-xl bg-white cursor-pointer border-none flex items-center gap-2"
-        >
-          <span class="m-0 p-0">Trier par</span>
-          <mat-icon>arrow_drop_down</mat-icon>
-        </button>
-      </div>
-
-      <div class="flex flex-col sm:grid grid-cols-2 gap-5">
-        @for (article of articles(); track article.id) {
-        <app-article-card [article]="article" />
-        }
+    <div class="h-full">
+      <div class="flex flex-col gap-8  p-9">
+        <app-article-actions-bar class="w-full" />
+        <app-article-list [articles]="articles()" />
       </div>
     </div>
   `,

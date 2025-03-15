@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { AuthenticationService } from './core/ports/auth/authentication.service';
+import { inject } from '@angular/core';
 
 export const routes: Routes = [
   {
@@ -15,8 +17,21 @@ export const routes: Routes = [
       },
       {
         path: 'home',
+        canMatch: [
+          () => {
+            const authenticationService = inject(AuthenticationService);
+            const isAuthenticated = authenticationService.getIsAuthenticated();
+
+            return isAuthenticated();
+          },
+        ],
         loadChildren: () => import('./views/home/home.routing'),
       },
     ],
+  },
+  {
+    path: '**',
+    loadComponent: () =>
+      import('../app/views/page-not-found/page-not-found.component'),
   },
 ];
