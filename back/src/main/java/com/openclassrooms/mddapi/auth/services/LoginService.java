@@ -40,7 +40,7 @@ public class LoginService {
         Optional<User> user = this.userRepository.findByEmail(identifier);
 
         if(user.isPresent()){
-            return  user;
+            return user;
         }
 
         return this.userRepository.findByUsername(identifier);

@@ -3,9 +3,11 @@ package com.openclassrooms.mddapi.auth.controller;
 import com.openclassrooms.mddapi.auth.controller.dtos.CreateUpdateUserDto;
 import com.openclassrooms.mddapi.auth.controller.dtos.LoginDto;
 import com.openclassrooms.mddapi.auth.controller.presenter.UserPresenter;
+import com.openclassrooms.mddapi.auth.controller.presenter.UserPresenterWithToken;
 import com.openclassrooms.mddapi.auth.domain.User;
 import com.openclassrooms.mddapi.auth.domain.UserWithToken;
 import com.openclassrooms.mddapi.auth.services.CreateUserService;
+import com.openclassrooms.mddapi.auth.services.GetCurrentUserServiceViaToken;
 import com.openclassrooms.mddapi.auth.services.LoginService;
 import com.openclassrooms.mddapi.auth.services.UpdateUserService;
 import jakarta.validation.Valid;
@@ -18,19 +20,24 @@ public class UserController {
     private final CreateUserService createUserService;
     private final UpdateUserService updateUserService;
     private final LoginService loginService;
+    private final GetCurrentUserServiceViaToken getCurrentUserServiceViaToken;
 
-    public UserController(CreateUserService createUserService, UpdateUserService updateUserService, LoginService loginService) {
+    public UserController(CreateUserService createUserService,
+                          UpdateUserService updateUserService,
+                          LoginService loginService,
+                          GetCurrentUserServiceViaToken getCurrentUserServiceViaToken) {
         this.createUserService = createUserService;
         this.updateUserService = updateUserService;
         this.loginService = loginService;
+        this.getCurrentUserServiceViaToken = getCurrentUserServiceViaToken;
     }
 
     @PostMapping("register")
-    public UserPresenter register(@RequestBody @Valid CreateUpdateUserDto createUserDto){
+    public UserPresenterWithToken register(@RequestBody @Valid CreateUpdateUserDto createUserDto){
 
         UserWithToken createdUser = this.createUserService.handle(createUserDto);
 
-        return UserPresenter.builder()
+        return UserPresenterWithToken.builder()
                 .id(createdUser.user().getId())
                 .username(createdUser.user().getUsername())
                 .email(createdUser.user().getEmail())
@@ -40,10 +47,10 @@ public class UserController {
     }
 
     @PostMapping("login")
-    public UserPresenter login(@RequestBody LoginDto loginDto){
+    public UserPresenterWithToken login(@RequestBody LoginDto loginDto){
         UserWithToken user = this.loginService.handle(loginDto);
 
-        return UserPresenter.builder()
+        return UserPresenterWithToken.builder()
                 .id(user.user().getId())
                 .username(user.user().getUsername())
                 .email(user.user().getEmail())
@@ -62,5 +69,20 @@ public class UserController {
                 .email(updatedUser.getEmail())
                 .dateCreated(updatedUser.getDateCreated().toString())
                 .build();
+    }
+
+    @GetMapping("me")
+    public UserPresenter getCurrentUser(@RequestHeader("Authorization") String authorizationHeader){
+        String token = authorizationHeader.substring(7);
+
+        User user = this.getCurrentUserServiceViaToken.handle(token);
+
+        return UserPresenter.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .dateCreated(user.getDateCreated().toString())
+                .build();
+
     }
 }

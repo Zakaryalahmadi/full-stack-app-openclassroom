@@ -18,8 +18,11 @@ public class TopicEntityMapper {
 
     private final UserEntityToUserDomainMapper userEntityToUserDomainMapper;
 
-    public TopicEntityMapper(UserEntityToUserDomainMapper userEntityToUserDomainMapper) {
+    private final UserDomainToUserEntityMapper userDomainToUserEntityMapper;
+
+    public TopicEntityMapper(UserEntityToUserDomainMapper userEntityToUserDomainMapper, UserDomainToUserEntityMapper userDomainToUserEntityMapper) {
         this.userEntityToUserDomainMapper = userEntityToUserDomainMapper;
+        this.userDomainToUserEntityMapper = userDomainToUserEntityMapper;
     }
 
     public Topic toDomain(TopicEntity topicEntity){
@@ -39,11 +42,15 @@ public class TopicEntityMapper {
 
     public TopicEntity toEntity(Topic topic){
 
+        Set<UserEntity> subscribers = topic.getSubscribers().stream()
+                .map(userDomainToUserEntityMapper)
+                .collect(Collectors.toSet());
+
         return new TopicEntity(
                 topic.getId(),
                 topic.getTitle(),
                 topic.getDescription(),
-                new HashSet<>(),
+                subscribers,
                 topic.getDateCreated(),
                 topic.getDateUpdated()
         );

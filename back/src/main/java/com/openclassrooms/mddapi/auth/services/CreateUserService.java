@@ -23,7 +23,9 @@ public class CreateUserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public CreateUserService(UserRepository userRepository, UserValidationService userValidationService, JWTService jwtService, PasswordEncoder passwordEncoder) {
+    public CreateUserService(UserRepository userRepository,
+                             UserValidationService userValidationService,
+                             JWTService jwtService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userValidationService = userValidationService;
         this.jwtService = jwtService;

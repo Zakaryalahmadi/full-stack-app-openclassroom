@@ -1,20 +1,29 @@
 package com.openclassrooms.mddapi.auth.services;
 
+import com.openclassrooms.mddapi.auth.adapter.security.JWTService;
 import com.openclassrooms.mddapi.auth.domain.User;
 import com.openclassrooms.mddapi.auth.domain.UserRepository;
 import com.openclassrooms.mddapi.auth.exceptions.UserNotFound;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
-public class GetCurrentUserService {
+@Service
+public class GetCurrentUserServiceViaToken {
     private final UserRepository userRepository;
 
-    public GetCurrentUserService(UserRepository userRepository) {
+    private final JWTService jwtService;
+
+    public GetCurrentUserServiceViaToken(UserRepository userRepository, JWTService jwtService) {
         this.userRepository = userRepository;
+        this.jwtService = jwtService;
     }
 
 
-    public User handle(Long userId){
+    public User handle(String token){
+        Jwt jwt = jwtService.decodeToken(token);
+
+        Long userId = jwt.getClaim("userId");
+
         return this.userRepository.findUserById(userId).orElseThrow(() -> new UserNotFound(userId));
     }
 }
