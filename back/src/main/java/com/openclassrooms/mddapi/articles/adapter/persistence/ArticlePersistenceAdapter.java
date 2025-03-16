@@ -1,6 +1,7 @@
 package com.openclassrooms.mddapi.articles.adapter.persistence;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
@@ -28,15 +29,14 @@ public class ArticlePersistenceAdapter implements ArticleRepository {
     @Override
     public List<Article> findAll() {
         return articleJpaRepository.findAll().stream()
-                .map(articleEntityToArticleDomain::apply)
+                .map(articleEntityToArticleDomain)
                 .toList();
     }
 
     @Override
-    public Article findById(Long id) {
+    public Optional<Article> findById(Long id) {
         return articleJpaRepository.findById(id)
-                .map(articleEntityToArticleDomain::apply)
-                .orElseThrow(() -> new ArticleNotFoundException(id));
+                .map(articleEntityToArticleDomain);
     }
 
     @Override
