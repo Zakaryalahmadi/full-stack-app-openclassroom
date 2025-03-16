@@ -1,8 +1,11 @@
 import { DatePipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { input } from '@angular/core';
-import { Article } from 'src/app/core/models/article.model';
+import {
+  Article,
+  ArticleWithTopicTitle,
+} from 'src/app/core/models/article.model';
 import { GoBackPageHeaderComponent } from 'src/app/shared/components/go-back-page-header/go-back-page-header.component';
 
 @Component({
@@ -16,7 +19,7 @@ import { GoBackPageHeaderComponent } from 'src/app/shared/components/go-back-pag
       <div class="flex gap-8">
         <p>{{ article().dateCreated | date }}</p>
         <p>{{ article().author }}</p>
-        <p>{{ article().theme }}</p>
+        <p>{{ article().topicTitle }}</p>
       </div>
       <div>
         <p>{{ article().content }}</p>
@@ -24,7 +27,8 @@ import { GoBackPageHeaderComponent } from 'src/app/shared/components/go-back-pag
     </div>
   `,
   imports: [GoBackPageHeaderComponent, DatePipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ArticleDetailsCardComponent {
-  readonly article = input.required<Article>();
+  readonly article = input.required<ArticleWithTopicTitle>();
 }

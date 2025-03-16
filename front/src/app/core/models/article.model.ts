@@ -6,3 +6,7 @@ export type Article = {
   content: string;
   dateCreated: string;
 };
+
+export type ArticleWithTopicTitle = Article & {
+  topicTitle: string;
+};
