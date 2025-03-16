@@ -13,7 +13,16 @@ import {
   TopicListComponent,
 } from './topic-list/topic-list.component';
 import { UserGateway } from 'src/app/core/ports/user/user.gateway';
-import { map, Observable, tap } from 'rxjs';
+import {
+  exhaustMap,
+  filter,
+  map,
+  Observable,
+  startWith,
+  Subject,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { User } from 'src/app/core/models/user.model';
 import { Topic } from 'src/app/core/models/topic.model';
 import TopicSubscriptionButtonComponent from './topic-card-subscription-button.component';
@@ -29,6 +38,7 @@ import TopicSubscriptionButtonComponent from './topic-card-subscription-button.c
           slot="action-button"
           [currentUserId]="currentUserId()"
           [topic]="topic"
+          (followTrigger)="followTrigger$$.next(topic.id)"
         />
       </app-topic-card>
       } }
@@ -45,13 +55,26 @@ export default class TopicPageComponent {
   private readonly topicGateway = inject(TopicGateway);
   private readonly userGateway = inject(UserGateway);
 
+  readonly followTrigger$$ = new Subject<string>();
+
+  readonly followTopic$ = this.followTrigger$$.pipe(
+    filter(Boolean),
+    exhaustMap((topicId) => this.topicGateway.followTopic$(topicId).pipe())
+  );
+
   readonly currentUserId: Signal<number | undefined> = toSignal(
     this.userGateway
       .getCurrentUser$()
       .pipe(map((currentUser) => currentUser.id))
   );
 
-  readonly topics: Signal<Topic[]> = toSignal(this.topicGateway.getTopics$(), {
-    initialValue: [],
-  });
+  readonly topics: Signal<Topic[]> = toSignal(
+    this.followTopic$.pipe(
+      startWith(undefined),
+      switchMap(() => this.topicGateway.getTopics$())
+    ),
+    {
+      initialValue: [],
+    }
+  );
 }

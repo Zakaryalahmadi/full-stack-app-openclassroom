@@ -6,3 +6,9 @@ export type User = {
   dateCreated: string;
   dateUpdated: string;
 };
+
+export type UpdateUserDto = {
+  username: string;
+  email: string;
+  password: string;
+};

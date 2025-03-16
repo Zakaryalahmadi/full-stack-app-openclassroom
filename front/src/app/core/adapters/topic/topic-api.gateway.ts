@@ -15,7 +15,14 @@ export class TopicApiGateway implements TopicGateway {
     return this.http.get<Topic[]>(`${this.baseUrl}/topic`);
   }
 
-  getCurrentTopics$(): Observable<Topic[]> {
-    throw new Error('Method not implemented.');
+  followTopic$(topicId: string): Observable<void> {
+    return this.http.patch<void>(`${this.baseUrl}/topic/${topicId}/follow`, {});
+  }
+
+  unfollowTopic$(topicId: string): Observable<void> {
+    return this.http.patch<void>(
+      `${this.baseUrl}/topic/${topicId}/unfollow`,
+      {}
+    );
   }
 }

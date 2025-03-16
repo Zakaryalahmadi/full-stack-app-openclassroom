@@ -20,6 +20,16 @@ export class ToastBarService {
       duration: this.TOAST_DURATIONIN_MS * 1000,
       horizontalPosition: 'right',
       verticalPosition: 'top',
+      panelClass: ['warn'],
+    });
+  }
+
+  openSuccessSnackBar(message: string): void {
+    this._snackBar.open(message, undefined, {
+      duration: this.TOAST_DURATIONIN_MS * 1000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+      panelClass: ['success'],
     });
   }
 }
