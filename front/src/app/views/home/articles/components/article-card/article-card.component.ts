@@ -11,7 +11,7 @@ import { RouterLink } from '@angular/router';
       <div class="bg-card-primary rounded-lg p-4">
         <h2>{{ article().title }}</h2>
         <div class="flex w-1/2 justify-between">
-          <p>{{ article().date | date }}</p>
+          <p>{{ article().dateCreated | date }}</p>
           <p class="center">{{ article().author }}</p>
         </div>
         <p>

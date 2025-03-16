@@ -4,5 +4,5 @@ export type Article = {
   author: string;
   theme: string;
   content: string;
-  date: string;
+  dateCreated: string;
 };

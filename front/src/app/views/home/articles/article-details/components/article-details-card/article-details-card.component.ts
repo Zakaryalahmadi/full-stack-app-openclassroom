@@ -14,7 +14,7 @@ import { GoBackPageHeaderComponent } from 'src/app/shared/components/go-back-pag
 
     <div class="px-24">
       <div class="flex gap-8">
-        <p>{{ article().date | date }}</p>
+        <p>{{ article().dateCreated | date }}</p>
         <p>{{ article().author }}</p>
         <p>{{ article().theme }}</p>
       </div>
