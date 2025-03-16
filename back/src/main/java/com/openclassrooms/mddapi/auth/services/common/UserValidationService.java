@@ -16,6 +16,8 @@ public class UserValidationService {
     }
 
     public void validateEmailUniqueness(String email){
+        if(email == null) return;
+
         Optional<User> existingUser = userRepository.findByEmail(email);
         if (existingUser.isPresent()) {
             throw new UserAlreadyExist(
@@ -25,6 +27,8 @@ public class UserValidationService {
     }
 
     public void validateUsernameUniqueness(String username){
+        if(username == null) return;
+
         Optional<User> existingUser = userRepository.findByUsername(username);
         if (existingUser.isPresent()) {
             throw new UserAlreadyExist(

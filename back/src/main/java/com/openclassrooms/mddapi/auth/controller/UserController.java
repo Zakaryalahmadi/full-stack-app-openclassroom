@@ -1,7 +1,8 @@
 package com.openclassrooms.mddapi.auth.controller;
 
-import com.openclassrooms.mddapi.auth.controller.dtos.CreateUpdateUserDto;
+import com.openclassrooms.mddapi.auth.controller.dtos.CreateUserDto;
 import com.openclassrooms.mddapi.auth.controller.dtos.LoginDto;
+import com.openclassrooms.mddapi.auth.controller.dtos.UpdateUserDto;
 import com.openclassrooms.mddapi.auth.controller.presenter.UserPresenter;
 import com.openclassrooms.mddapi.auth.controller.presenter.UserPresenterWithToken;
 import com.openclassrooms.mddapi.auth.domain.User;
@@ -33,7 +34,7 @@ public class UserController {
     }
 
     @PostMapping("register")
-    public UserPresenterWithToken register(@RequestBody @Valid CreateUpdateUserDto createUserDto){
+    public UserPresenterWithToken register(@RequestBody @Valid CreateUserDto createUserDto){
 
         UserWithToken createdUser = this.createUserService.handle(createUserDto);
 
@@ -59,18 +60,6 @@ public class UserController {
                 .build();
     }
 
-    @PatchMapping("user/{userId}")
-    public UserPresenter updateUser(@PathVariable Long userId, @RequestBody @Valid CreateUpdateUserDto updateUserDto){
-        User updatedUser  = this.updateUserService.handle(userId, updateUserDto);
-
-        return UserPresenter.builder()
-                .id(updatedUser.getId())
-                .username(updatedUser.getUsername())
-                .email(updatedUser.getEmail())
-                .dateCreated(updatedUser.getDateCreated().toString())
-                .build();
-    }
-
     @GetMapping("me")
     public UserPresenter getCurrentUser(@RequestHeader("Authorization") String authorizationHeader){
         String token = authorizationHeader.substring(7);
@@ -82,7 +71,23 @@ public class UserController {
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .dateCreated(user.getDateCreated().toString())
+                .dateUpdated(user.getDateUpdated().toString())
                 .build();
 
+    }
+
+    @PatchMapping("me")
+    public UserPresenter updateUser(@RequestHeader("Authorization") String authorizationHeader, @RequestBody @Valid UpdateUserDto updateUserDto){
+        String token = authorizationHeader.substring(7);
+
+        User updatedUser  = this.updateUserService.handle(token, updateUserDto);
+
+        return UserPresenter.builder()
+                .id(updatedUser.getId())
+                .username(updatedUser.getUsername())
+                .email(updatedUser.getEmail())
+                .dateCreated(updatedUser.getDateCreated().toString())
+                .dateUpdated(updatedUser.getDateUpdated().toString())
+                .build();
     }
 }

@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record CreateUpdateUserDto(
+public record CreateUserDto(
         @NotBlank(message = "Le nom d'utilisateur est obligatoire")
         @Size(min = 3, max = 50, message = "Le nom d'utilisateur doit contenir entre 3 et 50 caractères")
         String username,

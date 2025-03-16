@@ -1,16 +1,17 @@
 package com.openclassrooms.mddapi.auth.services;
 
-import com.openclassrooms.mddapi.auth.adapter.mapper.UserEntityToUserDomainMapper;
-import com.openclassrooms.mddapi.auth.controller.dtos.CreateUpdateUserDto;
+import com.openclassrooms.mddapi.auth.adapter.security.JWTService;
+import com.openclassrooms.mddapi.auth.controller.dtos.CreateUserDto;
+import com.openclassrooms.mddapi.auth.controller.dtos.UpdateUserDto;
 import com.openclassrooms.mddapi.auth.domain.User;
 import com.openclassrooms.mddapi.auth.domain.UserRepository;
-import com.openclassrooms.mddapi.auth.exceptions.UserAlreadyExist;
 import com.openclassrooms.mddapi.auth.exceptions.UserNotFound;
 import com.openclassrooms.mddapi.auth.services.common.UserValidationService;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 public class UpdateUserService {
@@ -18,24 +19,49 @@ public class UpdateUserService {
 
     private final UserValidationService userValidationService;
 
-    public UpdateUserService(UserRepository userRepository, UserValidationService userValidationService) {
+    private final JWTService jwtService;
+
+    private final PasswordEncoder passwordEncoder;
+
+    public UpdateUserService(UserRepository userRepository, UserValidationService userValidationService,
+                             JWTService jwtService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userValidationService = userValidationService;
+        this.jwtService = jwtService;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public User handle(Long id, CreateUpdateUserDto updateUserDto){
-        User existingUser = this.userRepository.findUserById(id)
-                .orElseThrow(() -> new UserNotFound(id));
+    public User handle(String token, UpdateUserDto updateUserDto) {
 
-        userValidationService.validateEmailUniqueness(updateUserDto.email());
+        Jwt jwt = jwtService.decodeToken(token);
 
-        userValidationService.validateUsernameUniqueness(updateUserDto.username());
+        Long userId = jwt.getClaim("userId");
 
-        existingUser.setEmail(updateUserDto.email());
-        existingUser.setUsername(updateUserDto.username());
-        existingUser.setPassword(updateUserDto.password());
+        User existingUser = this.userRepository.findUserById(userId)
+                .orElseThrow(() -> new UserNotFound(userId));
+
+
+        boolean isValidEmail = updateUserDto.email() != null && !updateUserDto.email().isEmpty() && !updateUserDto.email().equals(existingUser.getEmail());
+
+        boolean isValidUsername = updateUserDto.username() != null && !updateUserDto.username().isEmpty() && !updateUserDto.username().equals(existingUser.getUsername());
+
+        boolean isValidPassword = updateUserDto.password() != null && !updateUserDto.password().isEmpty();
+
+        if (isValidEmail) {
+            userValidationService.validateEmailUniqueness(updateUserDto.email());
+            existingUser.setEmail(updateUserDto.email());
+        }
+
+        if (isValidUsername) {
+            userValidationService.validateUsernameUniqueness(updateUserDto.username());
+            existingUser.setUsername(updateUserDto.username());
+        }
+
+        if (isValidPassword) {
+            existingUser.setPassword(passwordEncoder.encode(updateUserDto.password()));
+        }
+
         existingUser.setDateUpdated(LocalDateTime.now());
-
         return this.userRepository.save(existingUser);
     }
 

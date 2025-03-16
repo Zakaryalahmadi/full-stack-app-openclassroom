@@ -1,17 +1,15 @@
 package com.openclassrooms.mddapi.auth.services;
 
 import com.openclassrooms.mddapi.auth.adapter.security.JWTService;
-import com.openclassrooms.mddapi.auth.controller.dtos.CreateUpdateUserDto;
+import com.openclassrooms.mddapi.auth.controller.dtos.CreateUserDto;
 import com.openclassrooms.mddapi.auth.domain.User;
 import com.openclassrooms.mddapi.auth.domain.UserRepository;
 import com.openclassrooms.mddapi.auth.domain.UserWithToken;
-import com.openclassrooms.mddapi.auth.exceptions.UserAlreadyExist;
 import com.openclassrooms.mddapi.auth.services.common.UserValidationService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 public class CreateUserService {
@@ -33,7 +31,7 @@ public class CreateUserService {
     }
 
 
-    public UserWithToken handle(CreateUpdateUserDto createUserDto){
+    public UserWithToken handle(CreateUserDto createUserDto){
 
         userValidationService.validateEmailUniqueness(createUserDto.email());
 
