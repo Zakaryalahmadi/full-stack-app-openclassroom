@@ -71,7 +71,6 @@ public class UserController {
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .dateCreated(user.getDateCreated().toString())
-                .dateUpdated(user.getDateUpdated().toString())
                 .build();
 
     }
