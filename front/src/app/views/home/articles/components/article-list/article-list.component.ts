@@ -10,6 +10,11 @@ import ArticleCardComponent from '../article-card/article-card.component';
       <app-article-card [article]="article" />
       }
     </div>
+    @if (articles().length === 0) {
+    <div class="flex justify-center items-center h-full">
+      <p class="text-gray-500">No articles found</p>
+    </div>
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ArticleCardComponent],

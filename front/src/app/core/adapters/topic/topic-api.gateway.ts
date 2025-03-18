@@ -15,11 +15,11 @@ export class TopicApiGateway implements TopicGateway {
     return this.http.get<Topic[]>(`${this.baseUrl}/topic`);
   }
 
-  followTopic$(topicId: string): Observable<void> {
+  followTopic$(topicId: number): Observable<void> {
     return this.http.patch<void>(`${this.baseUrl}/topic/${topicId}/follow`, {});
   }
 
-  unfollowTopic$(topicId: string): Observable<void> {
+  unfollowTopic$(topicId: number): Observable<void> {
     return this.http.patch<void>(
       `${this.baseUrl}/topic/${topicId}/unfollow`,
       {}

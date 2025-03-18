@@ -30,7 +30,7 @@ export type AccountUserEditForm = {
   selector: 'app-account-user-edit-form',
   template: `
     <div class="flex flex-col justify-center items-center ">
-      <form class="flex flex-col w-96">
+      <form class="flex flex-col w-1/2">
         <mat-form-field class="w-full" appearance="outline">
           <mat-label>username</mat-label>
           <input matInput [formControl]="userEditForm.controls.username" />

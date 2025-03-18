@@ -1,9 +1,16 @@
 import { Observable } from 'rxjs';
-import { Article, ArticleWithTopicTitle } from '../../models/article.model';
+import {
+  Article,
+  ArticleWithTopicTitle,
+  CreateArticleDto,
+} from '../../models/article.model';
 
 export abstract class ArticleGateway {
   abstract getArticles$(): Observable<Article[]>;
   abstract getArticleById$(
     articleId: number
   ): Observable<ArticleWithTopicTitle>;
+  abstract createArticle$(
+    createArticleDto: CreateArticleDto
+  ): Observable<Article>;
 }

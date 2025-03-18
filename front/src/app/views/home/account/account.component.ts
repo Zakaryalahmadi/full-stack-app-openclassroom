@@ -88,7 +88,7 @@ export default class AccountComponent {
 
   private readonly toastBarService = inject(ToastBarService);
 
-  readonly unfollowTrigger$$ = new Subject<string>();
+  readonly unfollowTrigger$$ = new Subject<number>();
 
   readonly updateUserTrigger$$ = new Subject<UpdateUserDto>();
 

@@ -55,7 +55,7 @@ export default class TopicPageComponent {
   private readonly topicGateway = inject(TopicGateway);
   private readonly userGateway = inject(UserGateway);
 
-  readonly followTrigger$$ = new Subject<string>();
+  readonly followTrigger$$ = new Subject<number>();
 
   readonly followTopic$ = this.followTrigger$$.pipe(
     filter(Boolean),

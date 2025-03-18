@@ -1,5 +1,9 @@
 import { Observable, of, throwError } from 'rxjs';
-import { Article, ArticleWithTopicTitle } from '../../models/article.model';
+import {
+  Article,
+  ArticleWithTopicTitle,
+  CreateArticleDto,
+} from '../../models/article.model';
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ArticleGateway } from '../../ports/article/article.gateway';
@@ -16,5 +20,9 @@ export class ArticleApiGateway implements ArticleGateway {
 
   getArticleById$(articleId: number): Observable<ArticleWithTopicTitle> {
     return this.http.get<ArticleWithTopicTitle>(`${this.baseUrl}/${articleId}`);
+  }
+
+  createArticle$(createArticleDto: CreateArticleDto): Observable<Article> {
+    return this.http.post<Article>(`${this.baseUrl}`, createArticleDto);
   }
 }
