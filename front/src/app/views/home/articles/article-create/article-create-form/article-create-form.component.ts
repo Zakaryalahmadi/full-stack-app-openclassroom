@@ -3,6 +3,7 @@ import {
   Component,
   inject,
   output,
+  Signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -11,9 +12,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { map } from 'rxjs';
+import { map, Observable, switchMap } from 'rxjs';
 import { CreateArticleDto } from 'src/app/core/models/article.model';
+import { Topic } from 'src/app/core/models/topic.model';
 import { TopicGateway } from 'src/app/core/ports/topic/topic.gateway';
+import { UserGateway } from 'src/app/core/ports/user/user.gateway';
 export type ArticleFormType = {
   topicId: FormControl<string>;
   title: FormControl<string>;
@@ -31,7 +34,8 @@ export type ArticleFormType = {
             [formControl]="articleForm.controls.topicId"
             placeholder="Sélectionnez un thème"
           >
-            @for(topicTitle of topicsTitles(); track topicTitle.id) {
+            @for(topicTitle of userSubscribedTopicsTitles(); track
+            topicTitle.id) {
             <mat-option [value]="topicTitle.id">{{
               topicTitle.title
             }}</mat-option>
@@ -84,6 +88,12 @@ export class ArticleCreateFormComponent {
 
   private readonly topicGateway = inject(TopicGateway);
 
+  private readonly userGateway = inject(UserGateway);
+
+  readonly currentUserId$: Observable<number> = this.userGateway
+    .getCurrentUser$()
+    .pipe(map((user) => user.id));
+
   readonly articleForm = new FormGroup<ArticleFormType>({
     topicId: new FormControl<string>('', {
       nonNullable: true,
@@ -99,15 +109,23 @@ export class ArticleCreateFormComponent {
     }),
   });
 
-  readonly topicsTitles = toSignal(
-    this.topicGateway.getTopics$().pipe(
-      map((topics) =>
-        topics.map((topic) => ({
-          id: topic.id,
-          title: topic.title,
-        }))
+  readonly userSubscribedTopicsTitles = toSignal(
+    this.currentUserId$.pipe(
+      switchMap((userId) =>
+        this.topicGateway.getTopics$().pipe(
+          map((topics) => {
+            const userSubscribedTopics = topics.filter((topic) =>
+              topic.subscriberIds.includes(userId)
+            );
+            return userSubscribedTopics.map((topic) => ({
+              id: topic.id,
+              title: topic.title,
+            }));
+          })
+        )
       )
-    )
+    ),
+    { initialValue: [] }
   );
 
   createArticle(event: Event): void {

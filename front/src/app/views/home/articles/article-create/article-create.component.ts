@@ -14,9 +14,10 @@ import { ArticleCreateFormComponent } from './article-create-form/article-create
 import { GoBackPageHeaderComponent } from '../../../../shared/components/go-back-page-header/go-back-page-header.component';
 import { ArticleGateway } from 'src/app/core/ports/article/article.gateway';
 import { CreateArticleDto } from 'src/app/core/models/article.model';
-import { exhaustMap, Subject } from 'rxjs';
+import { exhaustMap, Subject, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-
+import { Router } from '@angular/router';
+import { ToastBarService } from 'src/app/shared/services/toast-bar.service';
 @Component({
   selector: 'app-article-create',
   imports: [
@@ -42,11 +43,19 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export default class ArticleCreateComponent {
   private readonly articleGateway = inject(ArticleGateway);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly toastBarService = inject(ToastBarService);
 
   createArticle(createArticleDto: CreateArticleDto): void {
     this.articleGateway
       .createArticle$(createArticleDto)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        tap(() => {
+          this.toastBarService.openSuccessSnackBar(
+            'Article created successfully'
+          );
+        })
+      )
       .subscribe();
   }
 }

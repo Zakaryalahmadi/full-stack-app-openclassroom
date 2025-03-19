@@ -11,7 +11,19 @@ import { ArticleGateway } from 'src/app/core/ports/article/article.gateway';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { UserGateway } from 'src/app/core/ports/user/user.gateway';
 import { TopicGateway } from 'src/app/core/ports/topic/topic.gateway';
-import { map, switchMap, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  exhaustMap,
+  map,
+  Observable,
+  startWith,
+  Subject,
+  switchMap,
+  tap,
+} from 'rxjs';
+import { Article } from 'src/app/core/models/article.model';
+import { Topic } from 'src/app/core/models/topic.model';
 
 @Component({
   selector: 'app-articles-page',
@@ -19,7 +31,10 @@ import { map, switchMap, tap } from 'rxjs';
   template: `
     <div class="h-full">
       <div class="flex flex-col gap-8  p-9">
-        <app-article-actions-bar class="w-full" />
+        <app-article-actions-bar
+          class="w-full"
+          (sortByTrigger)="sortByTrigger$$.next(!sortByTrigger$$.value)"
+        />
         <app-article-list [articles]="articlesRelatedToSubscribedTopics()" />
       </div>
     </div>
@@ -31,34 +46,38 @@ export default class ArticlesPageComponent {
   private readonly userGateway = inject(UserGateway);
   private readonly topicGateway = inject(TopicGateway);
 
-  readonly currentUserId$ = this.userGateway
+  readonly sortByTrigger$$ = new BehaviorSubject<boolean>(false);
+
+  readonly currentUserId$: Observable<number> = this.userGateway
     .getCurrentUser$()
     .pipe(map((user) => user.id));
 
-  readonly userSubscribedTopics$ = this.currentUserId$.pipe(
-    switchMap((userId) =>
-      this.topicGateway
-        .getTopics$()
-        .pipe(
-          map((topics) =>
-            topics.filter((topic) => topic.subscriberIds.includes(userId))
-          )
-        )
-    )
-  );
-
-  readonly articlesRelatedToSubscribedTopics = toSignal(
-    this.userSubscribedTopics$.pipe(
-      switchMap((topics) =>
-        this.articleGateway
-          .getArticles$()
+  readonly userSubscribedTopics$: Observable<Topic[]> =
+    this.currentUserId$.pipe(
+      switchMap((userId) =>
+        this.topicGateway
+          .getTopics$()
           .pipe(
-            map((articles) =>
-              articles.filter((article) =>
-                topics.some((topic) => article.relatedTopicId === topic.id)
-              )
+            map((topics) =>
+              topics.filter((topic) => topic.subscriberIds.includes(userId))
             )
           )
+      )
+    );
+
+  readonly articlesRelatedToSubscribedTopics: Signal<Article[]> = toSignal(
+    combineLatest([this.userSubscribedTopics$, this.sortByTrigger$$]).pipe(
+      switchMap(([topics, ascending]) =>
+        this.articleGateway.getArticles$(ascending).pipe(
+          map((articles) =>
+            articles.filter((article) => {
+              console.log('article', article);
+              return topics.some(
+                (topic) => article.relatedTopicId === topic.id
+              );
+            })
+          )
+        )
       )
     ),
     {

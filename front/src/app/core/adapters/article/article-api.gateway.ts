@@ -14,8 +14,8 @@ export class ArticleApiGateway implements ArticleGateway {
 
   private readonly baseUrl = `${environment.backendBaseUrl}/articles`;
 
-  getArticles$(): Observable<Article[]> {
-    return this.http.get<Article[]>(`${this.baseUrl}`);
+  getArticles$(ascending: boolean = false): Observable<Article[]> {
+    return this.http.get<Article[]>(`${this.baseUrl}?ascending=${ascending}`);
   }
 
   getArticleById$(articleId: number): Observable<ArticleWithTopicTitle> {

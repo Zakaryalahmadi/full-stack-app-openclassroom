@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
@@ -13,6 +13,7 @@ import { RouterLink } from '@angular/router';
         Créer un article
       </a>
       <button
+        (click)="sortByTrigger.emit()"
         class="text-xl bg-transparent cursor-pointer border-none flex items-center gap-2"
       >
         <span class="m-0 p-0">Trier par</span>
@@ -22,4 +23,6 @@ import { RouterLink } from '@angular/router';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class ArticleActionsBarComponent {}
+export default class ArticleActionsBarComponent {
+  readonly sortByTrigger = output<void>();
+}

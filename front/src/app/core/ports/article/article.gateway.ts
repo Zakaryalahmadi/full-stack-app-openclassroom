@@ -6,7 +6,7 @@ import {
 } from '../../models/article.model';
 
 export abstract class ArticleGateway {
-  abstract getArticles$(): Observable<Article[]>;
+  abstract getArticles$(ascending?: boolean): Observable<Article[]>;
   abstract getArticleById$(
     articleId: number
   ): Observable<ArticleWithTopicTitle>;
