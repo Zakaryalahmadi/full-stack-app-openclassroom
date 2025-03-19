@@ -1,11 +1,8 @@
 package com.openclassrooms.mddapi.auth.domain;
 
-import com.openclassrooms.mddapi.topic.domain.Topic;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Data
 @AllArgsConstructor

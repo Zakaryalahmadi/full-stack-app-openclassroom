@@ -24,9 +24,9 @@ public class UserController {
     private final GetCurrentUserServiceViaToken getCurrentUserServiceViaToken;
 
     public UserController(CreateUserService createUserService,
-                          UpdateUserService updateUserService,
-                          LoginService loginService,
-                          GetCurrentUserServiceViaToken getCurrentUserServiceViaToken) {
+            UpdateUserService updateUserService,
+            LoginService loginService,
+            GetCurrentUserServiceViaToken getCurrentUserServiceViaToken) {
         this.createUserService = createUserService;
         this.updateUserService = updateUserService;
         this.loginService = loginService;
@@ -34,59 +34,37 @@ public class UserController {
     }
 
     @PostMapping("register")
-    public UserPresenterWithToken register(@RequestBody @Valid CreateUserDto createUserDto){
+    public UserPresenterWithToken register(@RequestBody @Valid CreateUserDto createUserDto) {
 
         UserWithToken createdUser = this.createUserService.handle(createUserDto);
 
-        return UserPresenterWithToken.builder()
-                .id(createdUser.user().getId())
-                .username(createdUser.user().getUsername())
-                .email(createdUser.user().getEmail())
-                .token(createdUser.token())
-                .dateCreated(createdUser.user().getDateCreated().toString())
-                .build();
+        return UserPresenterWithToken.fromDomain(createdUser);
     }
 
     @PostMapping("login")
-    public UserPresenterWithToken login(@RequestBody LoginDto loginDto){
+    public UserPresenterWithToken login(@RequestBody LoginDto loginDto) {
         UserWithToken user = this.loginService.handle(loginDto);
 
-        return UserPresenterWithToken.builder()
-                .id(user.user().getId())
-                .username(user.user().getUsername())
-                .email(user.user().getEmail())
-                .token(user.token())
-                .dateCreated(user.user().getDateCreated().toString())
-                .build();
+        return UserPresenterWithToken.fromDomain(user);
     }
 
     @GetMapping("me")
-    public UserPresenter getCurrentUser(@RequestHeader("Authorization") String authorizationHeader){
+    public UserPresenter getCurrentUser(@RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.substring(7);
 
         User user = this.getCurrentUserServiceViaToken.handle(token);
 
-        return UserPresenter.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .dateCreated(user.getDateCreated().toString())
-                .build();
+        return UserPresenter.fromDomain(user);
 
     }
 
     @PatchMapping("me")
-    public UserPresenter updateUser(@RequestHeader("Authorization") String authorizationHeader, @RequestBody @Valid UpdateUserDto updateUserDto){
+    public UserPresenter updateUser(@RequestHeader("Authorization") String authorizationHeader,
+            @RequestBody @Valid UpdateUserDto updateUserDto) {
         String token = authorizationHeader.substring(7);
 
-        User updatedUser  = this.updateUserService.handle(token, updateUserDto);
+        User updatedUser = this.updateUserService.handle(token, updateUserDto);
 
-        return UserPresenter.builder()
-                .id(updatedUser.getId())
-                .username(updatedUser.getUsername())
-                .email(updatedUser.getEmail())
-                .dateCreated(updatedUser.getDateCreated().toString())
-                .dateUpdated(updatedUser.getDateUpdated().toString())
-                .build();
+        return UserPresenter.fromDomain(updatedUser);
     }
 }

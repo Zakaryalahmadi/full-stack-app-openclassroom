@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.openclassrooms.mddapi.articles.controller.dtos.CreateArticleDto;
@@ -43,8 +44,8 @@ public class ArticleController {
     }
 
     @GetMapping
-    public List<ArticlePresenter> getArticles() {
-        return getArticlesService.handle().stream()
+    public List<ArticlePresenter> getArticles(@RequestParam(required = false) Boolean ascending) {
+        return getArticlesService.handle(ascending).stream()
                 .map(ArticlePresenter::fromDomain)
                 .collect(Collectors.toList());
     }

@@ -15,7 +15,7 @@ public class GetArticlesService {
         this.articleRepository = articleRepository;
     }
 
-    public List<Article> handle() {
-        return this.articleRepository.findAll();
+    public List<Article> handle(Boolean ascending) {
+        return this.articleRepository.findAll(ascending);
     }
 }

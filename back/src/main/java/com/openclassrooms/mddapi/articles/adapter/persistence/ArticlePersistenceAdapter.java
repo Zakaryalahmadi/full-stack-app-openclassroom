@@ -3,13 +3,13 @@ package com.openclassrooms.mddapi.articles.adapter.persistence;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import com.openclassrooms.mddapi.articles.adapter.mapper.ArticleDomainToArticleEntity;
 import com.openclassrooms.mddapi.articles.adapter.mapper.ArticleEntityToArticleDomain;
 import com.openclassrooms.mddapi.articles.domain.Article;
 import com.openclassrooms.mddapi.articles.domain.ArticleRepository;
-import com.openclassrooms.mddapi.articles.exceptions.ArticleNotFoundException;
 
 @Repository
 public class ArticlePersistenceAdapter implements ArticleRepository {
@@ -27,8 +27,11 @@ public class ArticlePersistenceAdapter implements ArticleRepository {
     }
 
     @Override
-    public List<Article> findAll() {
-        return articleJpaRepository.findAll().stream()
+    public List<Article> findAll(Boolean ascending) {
+        Sort sort = Boolean.TRUE.equals(ascending) ? Sort.by("dateCreated").ascending()
+                : Sort.by("dateCreated").descending();
+
+        return articleJpaRepository.findAll(sort).stream()
                 .map(articleEntityToArticleDomain)
                 .toList();
     }
