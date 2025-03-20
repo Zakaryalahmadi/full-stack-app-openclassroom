@@ -1,8 +1,10 @@
 import { Observable, of, throwError } from 'rxjs';
 import {
   Article,
+  ArticleComment,
   ArticleWithTopicTitle,
   CreateArticleDto,
+  CreateCommentDto,
 } from '../../models/article.model';
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -24,5 +26,21 @@ export class ArticleApiGateway implements ArticleGateway {
 
   createArticle$(createArticleDto: CreateArticleDto): Observable<Article> {
     return this.http.post<Article>(`${this.baseUrl}`, createArticleDto);
+  }
+
+  getCommentsByArticleId$(articleId: number): Observable<ArticleComment[]> {
+    return this.http.get<ArticleComment[]>(
+      `${this.baseUrl}/${articleId}/comments`
+    );
+  }
+
+  createComment$(
+    createCommentDto: CreateCommentDto,
+    articleId: number
+  ): Observable<ArticleComment> {
+    return this.http.post<ArticleComment>(
+      `${this.baseUrl}/${articleId}/comments`,
+      createCommentDto
+    );
   }
 }

@@ -24,6 +24,7 @@ import {
 } from 'rxjs';
 import { Article } from 'src/app/core/models/article.model';
 import { Topic } from 'src/app/core/models/topic.model';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-articles-page',
@@ -33,6 +34,7 @@ import { Topic } from 'src/app/core/models/topic.model';
       <div class="flex flex-col gap-8  p-9">
         <app-article-actions-bar
           class="w-full"
+          [ascending]="sortByTrigger$$.value"
           (sortByTrigger)="sortByTrigger$$.next(!sortByTrigger$$.value)"
         />
         <app-article-list [articles]="articlesRelatedToSubscribedTopics()" />
@@ -43,10 +45,21 @@ import { Topic } from 'src/app/core/models/topic.model';
 })
 export default class ArticlesPageComponent {
   private readonly articleGateway = inject(ArticleGateway);
+
   private readonly userGateway = inject(UserGateway);
+
   private readonly topicGateway = inject(TopicGateway);
 
-  readonly sortByTrigger$$ = new BehaviorSubject<boolean>(false);
+  private readonly activatedRoute = inject(ActivatedRoute);
+
+  private readonly router = inject(Router);
+
+  readonly ascendingFromQueryParams: string =
+    this.activatedRoute.snapshot.queryParams['ascending'];
+
+  readonly sortByTrigger$$ = new BehaviorSubject<boolean>(
+    this.ascendingFromQueryParams === 'true'
+  );
 
   readonly currentUserId$: Observable<number> = this.userGateway
     .getCurrentUser$()
@@ -66,12 +79,16 @@ export default class ArticlesPageComponent {
     );
 
   readonly articlesRelatedToSubscribedTopics: Signal<Article[]> = toSignal(
-    combineLatest([this.userSubscribedTopics$, this.sortByTrigger$$]).pipe(
+    combineLatest([
+      this.userSubscribedTopics$,
+      this.sortByTrigger$$.pipe(
+        tap((ascending) => this.setUrlParams(ascending))
+      ),
+    ]).pipe(
       switchMap(([topics, ascending]) =>
         this.articleGateway.getArticles$(ascending).pipe(
           map((articles) =>
             articles.filter((article) => {
-              console.log('article', article);
               return topics.some(
                 (topic) => article.relatedTopicId === topic.id
               );
@@ -84,4 +101,12 @@ export default class ArticlesPageComponent {
       initialValue: [],
     }
   );
+
+  private setUrlParams(ascending: boolean) {
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { ascending: ascending.toString() },
+      queryParamsHandling: 'merge',
+    });
+  }
 }

@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
@@ -17,7 +22,11 @@ import { RouterLink } from '@angular/router';
         class="text-xl bg-transparent cursor-pointer border-none flex items-center gap-2"
       >
         <span class="m-0 p-0">Trier par</span>
+        @if (ascending()) {
         <mat-icon>arrow_drop_down</mat-icon>
+        } @else {
+        <mat-icon>arrow_drop_up</mat-icon>
+        }
       </button>
     </div>
   `,
@@ -25,4 +34,6 @@ import { RouterLink } from '@angular/router';
 })
 export default class ArticleActionsBarComponent {
   readonly sortByTrigger = output<void>();
+
+  readonly ascending = input.required<boolean>();
 }

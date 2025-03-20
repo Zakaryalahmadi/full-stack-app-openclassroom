@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, output } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -18,6 +18,7 @@ import { MatInputModule } from '@angular/material/input';
           ></textarea>
         </mat-form-field>
         <button
+          (click)="handleSubmit($event)"
           class="cursor-pointer bg-transparent border-none me-4 "
           type="submit"
         >
@@ -29,7 +30,16 @@ import { MatInputModule } from '@angular/material/input';
   imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule],
 })
 export class ArticleCommentFormComponent {
+  readonly commentTrigger = output<string>();
+
   readonly commentControl = new FormControl<string>('', {
     nonNullable: true,
   });
+
+  handleSubmit(e: Event) {
+    e.preventDefault();
+    if (this.commentControl.valid) {
+      this.commentTrigger.emit(this.commentControl.value);
+    }
+  }
 }

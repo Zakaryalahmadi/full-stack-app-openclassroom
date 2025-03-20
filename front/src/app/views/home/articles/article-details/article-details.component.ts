@@ -3,8 +3,13 @@ import {
   Component,
   inject,
   input,
+  Signal,
 } from '@angular/core';
-import { Article } from 'src/app/core/models/article.model';
+import {
+  Article,
+  ArticleComment,
+  ArticleWithTopicTitle,
+} from 'src/app/core/models/article.model';
 import { GoBackPageHeaderComponent } from '../../../../shared/components/go-back-page-header/go-back-page-header.component';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
@@ -14,6 +19,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import ArticleDetailsCardComponent from './components/article-details-card/article-details-card.component';
 import { ArticleCommentListComponent } from './components/article-comment-list/article-comment-list.component';
 import { ArticleCommentFormComponent } from './components/article-comment-form/article-comment-form.component';
+import { exhaustMap, filter, merge, Subject, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-article-details',
@@ -23,9 +29,11 @@ import { ArticleCommentFormComponent } from './components/article-comment-form/a
       <app-article-details-card [article]="article" />
       <div class="flex-1 flex flex-col mx-24 gap-8">
         <mat-divider />
-        <app-article-comment-list />
+        <app-article-comment-list [articleComments]="articleComments()" />
       </div>
-      <app-article-comment-form />
+      <app-article-comment-form
+        (commentTrigger)="commentTrigger$$.next($event)"
+      />
     </div>
     }
   `,
@@ -44,7 +52,30 @@ export default class ArticleDetailsComponent {
     inject(ActivatedRoute).snapshot.params['articleId']
   );
 
-  readonly article = toSignal(
+  readonly commentTrigger$$ = new Subject<string>();
+
+  private readonly comment$ = this.commentTrigger$$.asObservable().pipe(
+    filter(Boolean),
+    exhaustMap((content) =>
+      this.articleGateway.createComment$({ content }, this.articleId)
+    )
+  );
+
+  readonly articleComments: Signal<ArticleComment[]> = toSignal(
+    merge(
+      this.articleGateway.getCommentsByArticleId$(this.articleId),
+      this.comment$.pipe(
+        switchMap(() =>
+          this.articleGateway.getCommentsByArticleId$(this.articleId)
+        )
+      )
+    ),
+    {
+      initialValue: [],
+    }
+  );
+
+  readonly article: Signal<ArticleWithTopicTitle | undefined> = toSignal(
     this.articleGateway.getArticleById$(this.articleId)
   );
 }

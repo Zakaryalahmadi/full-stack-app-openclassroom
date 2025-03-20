@@ -17,3 +17,13 @@ export type CreateArticleDto = {
   title: string;
   content: string;
 };
+
+export type ArticleComment = {
+  id: number;
+  content: string;
+  authorName: string;
+};
+
+export type CreateCommentDto = {
+  content: string;
+};

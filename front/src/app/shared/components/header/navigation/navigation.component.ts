@@ -22,7 +22,6 @@ import { InactiveAccountUserCircleComponent } from '../../inactive-account-user-
             <a
               routerLink="home/articles"
               [routerLinkActive]="['text-primary']"
-              [routerLinkActiveOptions]="{ exact: true }"
               class="no-underline text-2xl sm:text-xl"
               #articleLink="routerLinkActive"
               [class.text-black]="!articleLink.isActive"
