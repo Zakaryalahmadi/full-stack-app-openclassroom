@@ -44,7 +44,7 @@ public class ArticleController {
     }
 
     @GetMapping
-    public List<ArticlePresenter> getArticles(@RequestParam(required = false) Boolean ascending) {
+    public List<ArticlePresenter> getArticles(@RequestParam Boolean ascending) {
         return getArticlesService.handle(ascending).stream()
                 .map(ArticlePresenter::fromDomain)
                 .collect(Collectors.toList());
