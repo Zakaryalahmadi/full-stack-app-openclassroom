@@ -11,7 +11,7 @@ public record CreateUserDto(
         String username,
 
         @NotBlank(message = "Le mot de passe est obligatoire")
-        @Size(min = 3, message = "Le mot de passe doit contenir au moins 3 caractères")
+        @Size(min = 8, message = "Le mot de passe doit contenir au moins 8 caractères")
         String password,
 
         @NotBlank(message = "L'email est obligatoire")

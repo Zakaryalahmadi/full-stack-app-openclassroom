@@ -46,7 +46,7 @@ public class CreateUserService {
 
         User savedUser = this.userRepository.save(newUser);
 
-        String token = jwtService.generateToken(newUser);
+        String token = jwtService.generateToken(savedUser);
 
         return new UserWithToken(savedUser, token);
     }
