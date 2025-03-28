@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { RegisterRequestDto } from 'src/app/core/ports/auth/authentication.service';
 
 export type RegisterForm = {
-  username: FormControl<string | null>;
+  username: FormControl<string>;
   email: FormControl<string>;
   password: FormControl<string>;
 };
@@ -32,7 +33,14 @@ export type RegisterForm = {
           <input matInput [formControl]="registerForm.controls.password" />
         </mat-form-field>
       </p>
-      <button class="w-40" mat-raised-button color="primary">S'inscrire</button>
+      <button
+        class="w-40"
+        mat-raised-button
+        color="primary"
+        (click)="onSubmit($event)"
+      >
+        S'inscrire
+      </button>
     </form>
   `,
   imports: [
@@ -43,9 +51,19 @@ export type RegisterForm = {
   ],
 })
 export class RegisterFormComponent {
+  readonly registerTrigger = output<RegisterRequestDto>();
+
   readonly registerForm = new FormGroup<RegisterForm>({
-    username: new FormControl<string | null>(null, { nonNullable: true }),
+    username: new FormControl<string>('', { nonNullable: true }),
     email: new FormControl<string>('', { nonNullable: true }),
     password: new FormControl<string>('', { nonNullable: true }),
   });
+
+  onSubmit(event: Event): void {
+    event.preventDefault();
+
+    if (this.registerForm.invalid) return;
+
+    this.registerTrigger.emit(this.registerForm.getRawValue());
+  }
 }

@@ -7,8 +7,15 @@ export type LoginRequestDto = {
   password: string;
 };
 
+export type RegisterRequestDto = {
+  username: string;
+  email: string;
+  password: string;
+};
+
 export abstract class AuthenticationService {
   abstract login(loginRequest: LoginRequestDto): Observable<User>;
+  abstract register(registerRequest: RegisterRequestDto): Observable<User>;
   abstract setAuthenticated(user: User): void;
   abstract getIsAuthenticated(): Signal<boolean>;
   abstract getIsAuthenticated(): Signal<boolean>;

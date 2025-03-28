@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import {
   AuthenticationService,
   LoginRequestDto,
+  RegisterRequestDto,
 } from '../../ports/auth/authentication.service';
 import { inject, Signal, signal } from '@angular/core';
 import { User } from '../../models/user.model';
@@ -38,5 +39,12 @@ export class AuthenticationServiceImpl extends AuthenticationService {
     this.navigationService.navigateToLogin();
     this.tokenService.removeToken();
     this.isAuthenticated.set(false);
+  }
+
+  register(registerRequest: RegisterRequestDto): Observable<User> {
+    return this.httpClient.post<User>(
+      `${this.authenticationBaseUrl}/register`,
+      registerRequest
+    );
   }
 }
