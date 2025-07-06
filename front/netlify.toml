@@ -1,5 +1,5 @@
 [build]
-  publish = "dist/front"
+  publish = "dist/front/browser"
   command = "ng build"
 
 [[redirects]]
