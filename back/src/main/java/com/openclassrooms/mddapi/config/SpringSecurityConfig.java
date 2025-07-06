@@ -19,8 +19,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Arrays;
@@ -32,6 +30,9 @@ public class SpringSecurityConfig {
 
     @Value("${jwt.secret}")
     private String SECRET;
+
+    @Value("${frontend_url}")
+    private String FRONTEND_URL;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -68,10 +69,7 @@ public class SpringSecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         // Allow localhost for development and your deployed frontend URLs
         configuration.setAllowedOrigins(List.of(
-                "http://localhost:4200",
-                "https://your-frontend-domain.render.com", // Replace with your actual frontend URL
-                "https://*.render.com" // Allow all Render subdomains
-        ));
+                FRONTEND_URL));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);

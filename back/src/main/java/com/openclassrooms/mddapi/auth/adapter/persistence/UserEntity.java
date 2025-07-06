@@ -10,11 +10,11 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity(name = "user")
+@Entity(name = "users")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserEntity  {
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,7 +38,7 @@ public class UserEntity  {
     }
 
     @PreUpdate
-    protected void onUpdated(){
+    protected void onUpdated() {
         this.dateUpdated = LocalDateTime.now();
     }
 }

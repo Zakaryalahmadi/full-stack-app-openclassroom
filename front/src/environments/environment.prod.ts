@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  backendBaseUrl: 'https://mdd-latest.onrender.com/v1',
 };
