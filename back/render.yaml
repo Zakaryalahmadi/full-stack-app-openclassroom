@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: mdd-backend
+    env: java
+    buildCommand: ./render-build.sh
+    startCommand: ./render-start.sh
+    envVars:
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: mdd-database
+          property: connectionString
+      - key: JAVA_OPTS
+        value: "-Xmx512m"
+
+  - type: pserv
+    name: mdd-database
+    env: postgres
+    plan: free
+    databaseName: mdd_db
+    databaseUser: mdd_user

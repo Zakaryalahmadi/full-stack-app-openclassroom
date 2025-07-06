@@ -1,6 +1,5 @@
 package com.openclassrooms.mddapi.config;
 
-
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -41,7 +40,7 @@ public class SpringSecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/v1/auth/register","/v1/auth/login").permitAll()
+                        .requestMatchers("/v1/auth/register", "/v1/auth/login").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(Customizer.withDefaults()))
@@ -67,7 +66,12 @@ public class SpringSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+        // Allow localhost for development and your deployed frontend URLs
+        configuration.setAllowedOrigins(List.of(
+                "http://localhost:4200",
+                "https://your-frontend-domain.render.com", // Replace with your actual frontend URL
+                "https://*.render.com" // Allow all Render subdomains
+        ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
