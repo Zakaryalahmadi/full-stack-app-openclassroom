@@ -1,0 +1,33 @@
+# Ignore build artifacts
+target/
+app.jar
+
+# Ignore IDE files
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore version control
+.git/
+.gitignore
+
+# Ignore environment files
+.env
+.env.local
+
+# Ignore documentation
+README.md
+DEPLOYMENT.md
+
+# Ignore logs
+*.log
+
+# Ignore render specific files
+render-build.sh
+render-start.sh
+render.yaml 

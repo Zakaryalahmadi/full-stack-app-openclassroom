@@ -5,6 +5,43 @@ set -e
 
 echo "Starting build process..."
 
+# Configure Java environment for Render
+export JAVA_VERSION=21
+export JAVA_HOME="/opt/java/openjdk"
+export PATH="$JAVA_HOME/bin:$PATH"
+
+# Check if Java is available
+if ! command -v java &> /dev/null; then
+    echo "Java not found, trying to locate it..."
+    
+    # Common Java locations on Render
+    JAVA_LOCATIONS=(
+        "/usr/lib/jvm/java-21-openjdk-amd64"
+        "/usr/lib/jvm/java-21-openjdk"
+        "/usr/lib/jvm/java-17-openjdk-amd64"
+        "/usr/lib/jvm/java-17-openjdk"
+        "/usr/lib/jvm/java-11-openjdk-amd64"
+        "/usr/lib/jvm/java-11-openjdk"
+        "/opt/java/openjdk"
+    )
+    
+    for java_path in "${JAVA_LOCATIONS[@]}"; do
+        if [ -d "$java_path" ]; then
+            export JAVA_HOME="$java_path"
+            export PATH="$JAVA_HOME/bin:$PATH"
+            echo "Found Java at: $JAVA_HOME"
+            break
+        fi
+    done
+fi
+
+# Display Java version
+echo "Java version:"
+java -version
+
+echo "JAVA_HOME: $JAVA_HOME"
+echo "PATH: $PATH"
+
 # Try to use Maven wrapper first, fallback to mvn
 if [ -f "./mvnw" ] && [ -x "./mvnw" ]; then
     echo "Using Maven wrapper..."
